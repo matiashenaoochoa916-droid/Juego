@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Sofía Plus Álvarez · Obby SENA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Lienzo principal del juego -->
+    <canvas id="game"></canvas>
+
+    <!-- HUD durante la partida -->
+    <header id="hud" class="hidden">
+        <div class="hud-box">
+            <span class="hud-tag">NIVEL</span>
+            <b id="hudLevel">1/8</b>
+            <span id="hudName">Primeros Pasos</span>
+        </div>
+        <div class="hud-progress" title="Progreso del nivel"><i id="hudBar"></i></div>
+        <div class="hud-box">
+            <span>⏱ <b id="hudTime">0:00</b></span>
+            <span>💀 <b id="hudDeaths">0</b></span>
+        </div>
+        <div class="hud-btns">
+            <button id="btnMute" class="icon" title="Sonido (M)">🔊</button>
+            <button id="btnPause" class="icon" title="Pausa (P)">⏸</button>
+        </div>
+    </header>
+
+    <!-- MENÚ PRINCIPAL -->
+    <section id="menu" class="screen">
+        <div class="menu-content">
+            <div class="badge">★ OBBY · SENA EDITION ★</div>
+            <h1 id="title" aria-label="Sofía Plus Álvarez"></h1>
+            <p class="tagline">¡Conquista el vacío, supera los retos y llega al final!</p>
+
+            <div class="menu-buttons">
+                <button id="btnPlay" class="btn btn-play"><span class="ico">▶</span> JUGAR</button>
+                <button id="btnCustom" class="btn btn-custom"><span class="ico">🎨</span> PERSONALIZAR</button>
+                <button id="btnName" class="btn btn-name"><span class="ico">✏️</span> MI NOMBRE</button>
+                <button id="btnStats" class="btn btn-stats"><span class="ico">📊</span> CLASIFICACIÓN Y GRÁFICA</button>
+            </div>
+
+            <div class="player-chip" id="playerChip">👤 <b id="chipName">Sofía</b></div>
+
+            <div class="levels-wrap">
+                <span class="levels-label">Niveles</span>
+                <div id="levelChips" class="levels"></div>
+            </div>
+
+            <p class="hint">
+                <kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> mover &nbsp;·&nbsp;
+                <kbd>ESPACIO</kbd> / <kbd>↑</kbd> saltar &nbsp;·&nbsp;
+                <kbd>↓</kbd> soltarte &nbsp;·&nbsp; <kbd>R</kbd> volver al punto &nbsp;·&nbsp; <kbd>P</kbd> pausa
+            </p>
+        </div>
+    </section>
+
+    <!-- PERSONALIZAR -->
+    <section id="customize" class="screen hidden">
+        <div class="custom-card">
+            <div class="custom-left">
+                <h2>Tu aprendiz</h2>
+                <canvas id="preview" width="320" height="380"></canvas>
+                <div class="preview-name" id="previewName">Sofía</div>
+                <div class="preview-actions">
+                    <button id="btnPose" class="btn mini">🕺 Cambiar pose</button>
+                    <button id="btnTurn" class="btn mini">🔄 Girar</button>
+                    <button id="btnRandom" class="btn mini">🎲 Aleatorio</button>
+                </div>
+            </div>
+            <div class="custom-right">
+                <div id="optionPanels"></div>
+                <div class="custom-footer">
+                    <button id="btnCustomDone" class="btn btn-play">✔ LISTO</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MI NOMBRE -->
+    <section id="nameModal" class="screen hidden">
+        <div class="modal">
+            <h2>¿Cómo te llamas?</h2>
+            <p>Tu nombre aparecerá sobre tu personaje.</p>
+            <input id="nameInput" type="text" maxlength="14" placeholder="Escribe tu nombre" autocomplete="off">
+            <div class="modal-actions">
+                <button id="btnNameSave" class="btn btn-play">GUARDAR</button>
+                <button id="btnNameCancel" class="btn btn-name">CANCELAR</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAUSA -->
+    <section id="pause" class="screen hidden">
+        <div class="modal">
+            <h2>⏸ Pausa</h2>
+            <div class="modal-actions col">
+                <button id="btnResume" class="btn btn-play">▶ CONTINUAR</button>
+                <button id="btnRestart" class="btn btn-custom">↺ REINICIAR NIVEL</button>
+                <button id="btnPauseStats" class="btn btn-stats">📊 GRÁFICA Y PUNTAJES</button>
+                <button id="btnToMenu" class="btn btn-name">🏠 MENÚ</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- VICTORIA -->
+    <section id="win" class="screen hidden">
+        <div class="modal win-modal">
+            <div class="trophy">🏆</div>
+            <h2 id="winTitle">¡Felicitaciones!</h2>
+            <p>Completaste los 8 niveles del obby SENA.<br>¡Eres un verdadero maestro del vacío!</p>
+            <div class="win-stats">
+                <div><span>Tiempo</span><b id="winTime">0:00</b></div>
+                <div><span>Caídas</span><b id="winDeaths">0</b></div>
+            </div>
+            <div class="modal-actions">
+                <button id="btnWinStats" class="btn btn-stats">📊 VER GRÁFICA Y PUNTAJES</button>
+                <button id="btnWinAgain" class="btn btn-play">↺ JUGAR DE NUEVO</button>
+                <button id="btnWinMenu" class="btn btn-name">🏠 MENÚ</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLASIFICACIÓN Y GRÁFICA DE MUERTES -->
+    <section id="statsModal" class="screen hidden">
+        <div class="modal stats-card">
+            <h2>📊 Clasificación y Estadísticas</h2>
+            <div class="chart-section">
+                <h3>💀 Caídas registradas por Nivel</h3>
+                <div class="chart-container">
+                    <canvas id="deathsCanvas" width="480" height="180"></canvas>
+                </div>
+            </div>
+            <div class="scores-section">
+                <h3>🏆 Ranking de Jugadores (0% a 100%)</h3>
+                <div id="scoresList" class="scores-list"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="btnStatsClose" class="btn btn-play">✔ VOLVER</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Efectos de inicio -->
+    <div id="curtain"><span>¡PREPÁRATE!</span></div>
+    <div id="intro"></div>
+    <div id="count"></div>
+    <div id="banner"></div>
+
+    <!-- Controles táctiles -->
+    <div id="touch" class="hidden">
+        <div class="touch-left">
+            <button data-k="left">◀</button>
+            <button data-k="right">▶</button>
+        </div>
+        <div class="touch-right">
+            <button data-k="down">▼</button>
+            <button data-k="jump" class="big">▲</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
